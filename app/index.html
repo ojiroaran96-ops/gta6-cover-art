@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Palms Cover Studio — GTA-style cover art maker</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<header id="appHeader">
+  <div>
+    <h1 id="appTitle">NEON PALMS <span>Cover Studio</span></h1>
+    <p id="appTagline">Turn any photo into GTA-style cover art. Offline, in your browser, photos never uploaded.</p>
+  </div>
+  <div id="headerActions">
+    <button id="undoButton" type="button" title="Undo (Ctrl+Z)">↩ Undo</button>
+    <button id="redoButton" type="button" title="Redo (Ctrl+Y)">↪ Redo</button>
+  </div>
+</header>
+
+<main id="studio">
+  <section id="stagePanel" aria-label="Cover preview">
+    <div id="sizeTabs" role="tablist" aria-label="Post size">
+      <button id="sizeSquare" type="button" data-size="square" role="tab" aria-selected="true">Square 1080×1080</button>
+      <button id="sizePortrait" type="button" data-size="portrait" role="tab" aria-selected="false">Portrait 1080×1350</button>
+      <button id="sizeWide" type="button" data-size="wide" role="tab" aria-selected="false">Wide 1920×1080</button>
+    </div>
+    <div id="canvasWrap">
+      <canvas id="previewCanvas" width="1080" height="1080"></canvas>
+      <p id="stageHint">Click a panel to select it. Drag inside it to move the photo, scroll to zoom.</p>
+    </div>
+    <div id="panelBar" aria-label="Selected panel">
+      <span id="panelLabel">Panel 1</span>
+      <label>Photo
+        <select id="panelPhoto"></select>
+      </label>
+      <label>Zoom
+        <input id="panelZoom" type="range" min="1" max="3" step="0.01" value="1">
+      </label>
+      <label>Rotate
+        <input id="panelRotate" type="range" min="-25" max="25" step="1" value="0">
+      </label>
+      <button id="panelFlip" type="button">Flip</button>
+      <button id="fillAllButton" type="button">Fill all panels with this photo</button>
+    </div>
+  </section>
+
+  <aside id="controlPanel" aria-label="Cover controls">
+    <section id="photosSection" class="controlGroup">
+      <h2>1 · Photos</h2>
+      <p class="groupNote">Your photos stay on your machine.</p>
+      <label id="uploadLabel" for="fileInput">+ Add your photos</label>
+      <input id="fileInput" type="file" accept="image/*" multiple>
+      <button id="sampleButton" type="button">Use sample photos</button>
+      <div id="libraryStrip" aria-label="Photo library"></div>
+    </section>
+
+    <section id="layoutSection" class="controlGroup">
+      <h2>2 · Layout</h2>
+      <div id="layoutPicker">
+        <button type="button" data-layout="grid4" class="layoutChoice" aria-pressed="true">
+          <span class="miniGrid miniGrid4"></span>Four-panel grid
+        </button>
+        <button type="button" data-layout="hero3" class="layoutChoice" aria-pressed="false">
+          <span class="miniGrid miniHero3"></span>Hero + three
+        </button>
+        <button type="button" data-layout="fullbleed" class="layoutChoice" aria-pressed="false">
+          <span class="miniGrid miniFull"></span>Full-bleed
+        </button>
+        <button type="button" data-layout="tilted" class="layoutChoice" aria-pressed="false">
+          <span class="miniGrid miniTilted"></span>Tilted snapshots
+        </button>
+        <button type="button" data-layout="grid9" class="layoutChoice" aria-pressed="false">
+          <span class="miniGrid miniGrid9"></span>Nine-panel grid
+        </button>
+      </div>
+    </section>
+
+    <section id="gradeSection" class="controlGroup">
+      <h2>3 · Grade</h2>
+      <div id="gradePicker">
+        <button type="button" data-grade="sunset" class="gradeChoice" aria-pressed="true"><span class="swatch swatchSunset"></span>Sunset</button>
+        <button type="button" data-grade="neon" class="gradeChoice" aria-pressed="false"><span class="swatch swatchNeon"></span>Neon night</button>
+        <button type="button" data-grade="gold" class="gradeChoice" aria-pressed="false"><span class="swatch swatchGold"></span>Gold hour</button>
+        <button type="button" data-grade="dusk" class="gradeChoice" aria-pressed="false"><span class="swatch swatchDusk"></span>Dusk blue</button>
+        <button type="button" data-grade="candy" class="gradeChoice" aria-pressed="false"><span class="swatch swatchCandy"></span>Candy pink</button>
+      </div>
+    </section>
+
+    <section id="captionSection" class="controlGroup">
+      <h2>4 · Caption</h2>
+      <label>Title
+        <input id="titleInput" type="text" value="NEON PALMS" maxlength="24">
+      </label>
+      <label>Subtitle (script)
+        <input id="subtitleInput" type="text" value="chasing the sunset" maxlength="40">
+      </label>
+      <label>Badge ribbon
+        <input id="badgeInput" type="text" value="EST. 2026" maxlength="18">
+      </label>
+      <label>Title size
+        <input id="titleSize" type="range" min="0.7" max="1.3" step="0.05" value="1">
+      </label>
+      <div id="heatPicker" aria-label="Heat meter">
+        <span>Heat</span>
+        <button type="button" data-heat="1" aria-label="1 star">★</button>
+        <button type="button" data-heat="2" aria-label="2 stars">★</button>
+        <button type="button" data-heat="3" aria-label="3 stars">★</button>
+        <button type="button" data-heat="4" aria-label="4 stars">★</button>
+        <button type="button" data-heat="5" aria-label="5 stars">★</button>
+      </div>
+    </section>
+
+    <section id="effectsSection" class="controlGroup">
+      <h2>5 · Finish</h2>
+      <label class="checkRow"><input id="halftoneToggle" type="checkbox" checked> Halftone title block</label>
+      <label class="checkRow"><input id="grainToggle" type="checkbox" checked> Film grain</label>
+      <label class="checkRow"><input id="vignetteToggle" type="checkbox" checked> Vignette</label>
+      <label class="checkRow"><input id="frameToggle" type="checkbox" checked> Poster frame</label>
+    </section>
+
+    <section id="exportSection" class="controlGroup">
+      <h2>6 · Export PNG</h2>
+      <button id="exportAllButton" type="button">Export all 3 sizes</button>
+      <button id="exportOneButton" type="button">Export this size only</button>
+      <p id="exportNote">1080×1080 · 1080×1350 · 1920×1080 — ready to post.</p>
+    </section>
+  </aside>
+</main>
+
+<footer id="appFooter">
+  <p>Fonts Anton &amp; Pacifico under the SIL Open Font License. Sample photos were made with an image model for this app. No Rockstar Games artwork, logos or fonts.</p>
+</footer>
+
+<script type="module" src="src/editor.js"></script>
+</body>
+</html>
