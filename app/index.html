@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Palms Cover Studio — GTA-style cover art maker</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<header id="topBar">
+  <div id="brand">
+    <span id="brandMark">NP</span>
+    <div>
+      <h1 id="brandTitle">NEON PALMS</h1>
+      <p id="brandSub">Cover Studio — turn your photos into poster art</p>
+    </div>
+  </div>
+  <div id="topActions">
+    <button id="undoBtn" type="button" title="Undo (Ctrl+Z)">Undo</button>
+    <button id="redoBtn" type="button" title="Redo (Ctrl+Shift+Z)">Redo</button>
+    <button id="exportAllBtn" type="button" class="primary">Export all 3 sizes</button>
+  </div>
+</header>
+
+<main id="studio">
+  <section id="stageWrap">
+    <div id="stageBar">
+      <span id="stageLabel">Live preview</span>
+      <div id="sizeBar" role="group" aria-label="Export size">
+        <button id="sizeSquareBtn" type="button" data-size="square">1080 × 1080</button>
+        <button id="sizePortraitBtn" type="button" data-size="portrait">1080 × 1350</button>
+        <button id="sizeWideBtn" type="button" data-size="wide" class="active">1920 × 1080</button>
+      </div>
+    </div>
+    <div id="canvasFrame">
+      <canvas id="stageCanvas" width="960" height="540"></canvas>
+      <p id="stageHint">Click a panel to select it · drag to move the photo · scroll to zoom</p>
+    </div>
+    <div id="panelBar">
+      <span id="panelInfo">No panel selected — click a panel on the cover</span>
+      <label id="zoomLabel">Zoom <input id="zoomSlider" type="range" min="1" max="3" step="0.01" value="1"></label>
+      <label id="panXLabel">Pan X <input id="panXSlider" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+      <label id="panYLabel">Pan Y <input id="panYSlider" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+      <button id="centerPanelBtn" type="button">Center photo</button>
+    </div>
+    <div id="exportBar">
+      <button id="exportSquareBtn" type="button" data-size="square">Export 1080 × 1080</button>
+      <button id="exportPortraitBtn" type="button" data-size="portrait">Export 1080 × 1350</button>
+      <button id="exportWideBtn" type="button" data-size="wide">Export 1920 × 1080</button>
+    </div>
+  </section>
+
+  <aside id="controls">
+    <section id="photosSection" class="panel">
+      <h2>1 · Your photos</h2>
+      <p class="note">Photos stay on your machine — nothing is uploaded.</p>
+      <div id="photoTray"></div>
+      <div class="row">
+        <label id="addPhotosLabel" for="addPhotosInput">+ Add photos</label>
+        <input id="addPhotosInput" type="file" accept="image/*" multiple hidden>
+        <button id="fillAllBtn" type="button">Fill all panels</button>
+      </div>
+      <p class="note">Click a photo to put it in the selected panel.</p>
+    </section>
+
+    <section id="layoutSection" class="panel">
+      <h2>2 · Layout</h2>
+      <div id="layoutBar">
+        <button type="button" data-layout="grid4" class="active">Four-panel grid</button>
+        <button type="button" data-layout="hero3">Hero + three</button>
+        <button type="button" data-layout="fullbleed">Full bleed</button>
+        <button type="button" data-layout="tilted">Tilted snapshots</button>
+        <button type="button" data-layout="nine">Nine + title block</button>
+      </div>
+    </section>
+
+    <section id="gradeSection" class="panel">
+      <h2>3 · Sunset grade</h2>
+      <div id="gradeBar">
+        <button type="button" data-grade="sunset" class="active"><span class="swatch" style="background:linear-gradient(135deg,#2a1150,#ff5e62,#ffd194)"></span>Sunset</button>
+        <button type="button" data-grade="neon"><span class="swatch" style="background:linear-gradient(135deg,#062a33,#ff2e88,#37e6ff)"></span>Neon Nights</button>
+        <button type="button" data-grade="vice"><span class="swatch" style="background:linear-gradient(135deg,#12082e,#ff2e88,#ffd166)"></span>Vice Pink</button>
+        <button type="button" data-grade="gold"><span class="swatch" style="background:linear-gradient(135deg,#2b1a08,#ff9d00,#fff3c4)"></span>Golden Hour</button>
+        <button type="button" data-grade="heat"><span class="swatch" style="background:linear-gradient(135deg,#2b0603,#ff3b00,#ffb347)"></span>Heat Haze</button>
+        <button type="button" data-grade="noir"><span class="swatch" style="background:linear-gradient(135deg,#0a0a0f,#5a5a6e,#e8e8f0)"></span>Mono Noir</button>
+      </div>
+    </section>
+
+    <section id="captionSection" class="panel">
+      <h2>4 · Caption</h2>
+      <label class="field">Title
+        <input id="titleInput" type="text" value="NEON PALMS" maxlength="24">
+      </label>
+      <label class="field">Subtitle (neon script)
+        <input id="subtitleInput" type="text" value="chasing the sunset" maxlength="40">
+      </label>
+      <label class="field">Badge ribbon
+        <input id="badgeInput" type="text" value="PALM CITY" maxlength="16">
+      </label>
+      <label class="field">Heat meter
+        <input id="starsSlider" type="range" min="0" max="5" step="1" value="4">
+        <span id="starsValue">★★★★☆</span>
+      </label>
+      <label class="field">Title fill
+        <select id="titleFillSelect">
+          <option value="sunset" selected>Sunset gradient</option>
+          <option value="white">White ink</option>
+          <option value="neon">Neon pink</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="finishSection" class="panel">
+      <h2>5 · Finish</h2>
+      <label class="check"><input id="grainToggle" type="checkbox" checked> Film grain</label>
+      <label class="check"><input id="vignetteToggle" type="checkbox" checked> Vignette</label>
+      <label class="check"><input id="inkToggle" type="checkbox" checked> Inked panel borders</label>
+      <label class="check"><input id="halftoneToggle" type="checkbox" checked> Halftone title block</label>
+    </section>
+
+    <p id="credits">Fonts Anton &amp; Pacifico (SIL Open Font License). Sample photos are AI-made. Original art — no game logos, artwork or fonts.</p>
+  </aside>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
