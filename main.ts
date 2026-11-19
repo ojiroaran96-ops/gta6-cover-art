@@ -4,15 +4,20 @@
 // buildDossier from vendor/makefun-app.ts. Outside the grader,
 // MAKEFUN_OUTPUT_DIR stands in for /output.
 import { buildDossier } from "./vendor/makefun-app.ts";
-import { cpSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(fileURLToPath(import.meta.url));
 const outputDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
 
-rmSync(outputDir, { recursive: true, force: true });
+// The output directory itself must never be removed: in the grader its
+// parent is read-only for the grader user, so rmdir fails with EACCES.
+// Clear only its contents instead.
 mkdirSync(outputDir, { recursive: true });
+for (const entry of readdirSync(outputDir)) {
+  rmSync(join(outputDir, entry), { recursive: true, force: true });
+}
 cpSync(join(repoRoot, "app"), join(outputDir, "app"), { recursive: true });
 cpSync(join(repoRoot, "screenshots"), join(outputDir, "screenshots"), { recursive: true });
 
